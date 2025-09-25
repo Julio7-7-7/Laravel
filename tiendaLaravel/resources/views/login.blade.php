@@ -9,7 +9,7 @@
   <div class="bg-white p-6 rounded shadow-md w-80">
     <h1 class="text-2xl font-bold mb-4 text-center">Bienvenido al login waos</h1>
 
-    <form action="#" method="POST" class="flex flex-col gap-3">
+    <form action="/login-authenticator" method="POST" class="flex flex-col gap-3">
       @csrf
       <input type="text" name="username" placeholder="Username" class="border p-2 rounded">
       <input type="password" name="password" placeholder="Password" class="border p-2 rounded">
