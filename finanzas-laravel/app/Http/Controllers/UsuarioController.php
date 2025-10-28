@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
 {
@@ -33,7 +34,7 @@ class UsuarioController extends Controller
         Usuario::create([
             'nombre' => $request->input('nombre'),
             'username' => $request->input('usuario'),
-            'password' => $request->input('password')
+            'password' => Hash::make($request->input('password'))
         ]);
 
         return redirect()->route('iniciar')->with('success', 'Usuario registrado exitosamente.');

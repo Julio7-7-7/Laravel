@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -65,18 +66,30 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        // Validamos los campos
+        $request->validate([
+            'usuario' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
         $credentials = $request->only('usuario', 'password');
 
+        // Buscamos al usuario por el campo 'username'
         $usuario = \App\Models\Usuario::where('username', $credentials['usuario'])->first();
 
-        if ($usuario && $usuario->password === $credentials['password']) {
+        // Verificamos si existe y si la contraseña es correcta (hasheada)
+        if ($usuario && Hash::check($credentials['password'], $usuario->password)) {
             Auth::login($usuario);
             return redirect()->route('panel.principal');
         }
 
-        return back()->withErrors(['login' => 'Error al ingresar']);
+        // Si falla, regresamos con error
+        return back()->withErrors([
+            'usuario' => 'Las credenciales proporcionadas son incorrectas.',
+        ])->withInput($request->except('password'));
     }
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
         return redirect()->route('iniciar')->with('success', 'Sesión cerrada correctamente');
     }
